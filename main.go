@@ -12,8 +12,31 @@ type Box struct {
 	Type [4]byte
 }
 
+func parseTkhdBox(file *os.File, size uint32) {
+	slog.Info("Parsing tkhd box", "size", size)
+}
+func parseMdiaBox(file *os.File, size uint32) {
+	slog.Info("Parsing mdia box", "size", size)
+}
 func parseTrakBox(file *os.File, size uint32) {
 	slog.Info("Parsing trak box", "size", size)
+	endposition, _ := file.Seek(0, 1)
+	endposition += int64(size - 8)
+	for {
+		var header Box
+		err := binary.Read(file, binary.BigEndian, &header)
+		if err != nil || int64(header.Size) < 8 {
+			break
+		}
+		boxType := string(header.Type[:])
+		if boxType == "tkbhd" {
+			parseTkhdBox(file, header.Size)
+		} else if boxType == "mdia" {
+			parseMdiaBox(file, header.Size)
+		} else {
+			slog.Info("Skipping box in Trak", "type", boxType, "size", header.Size)
+		}
+	}
 }
 
 func parseMoovBox(file *os.File, size uint32) {
