@@ -17,12 +17,15 @@ func parseTrakBox(file *os.File, size uint32) {
 			break
 		}
 		boxType := string(header.Type[:])
-		if boxType == "tkbhd" {
+		if boxType == "tkhd" {
 			parseTkhdBox(file, header.Size)
 		} else if boxType == "mdia" {
 			parseMdiaBox(file, header.Size)
 		} else {
 			slog.Info("Skipping box in Trak", "type", boxType, "size", header.Size)
+		}
+		if newPos, err := file.Seek(int64(header.Size)-8, 1); err != nil || newPos >= endposition {
+			break
 		}
 	}
 }
