@@ -16,9 +16,10 @@ func Parsefile(file *os.File) {
 		boxType := string(header.Type[:])
 		if boxType == "moov" {
 			slog.Info("moov box found", "size", header.Size)
-			parseMoovBox(file, header.Size)
+			ParseMoovBox(file, header.Size)
 		} else if boxType == "mdat" {
 			slog.Info("mdat box found", "size", header.Size)
+			parseMdatBox(file, header.Size)
 		} else {
 			slog.Info("Skipping box", "type", boxType, "size", header.Size)
 		}

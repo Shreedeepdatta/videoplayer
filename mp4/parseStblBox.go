@@ -17,11 +17,21 @@ func parseStblBox(file *os.File, size uint32) {
 			break
 		}
 		boxType := string(header.Type[:])
-		if boxType == "stco" {
+		switch boxType {
+		case "stsd":
+			parseStsdBox(file, header.Size)
+		case "stts":
+			parseSttsBox(file, header.Size)
+		case "stsc":
+			parseStscBox(file, header.Size)
+		case "stsz":
+			parseStszBox(file, header.Size)
+		case "stco":
 			parseStcoBox(file, header.Size)
-		} else {
-			slog.Info("Skipping box in stbl", "type", boxType, "size", header.Size)
+		default:
+			slog.Info("skipping box in stbl", "type", boxType, "size", header.Size)
 		}
+
 		if newposition, err := file.Seek(int64(header.Size)-8, 1); err != nil || newposition >= endposition {
 			break
 		}

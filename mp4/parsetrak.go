@@ -19,7 +19,7 @@ func parseTrakBox(file *os.File, size uint32) {
 		boxType := string(header.Type[:])
 		if boxType == "tkhd" {
 			parseTkhdBox(file, header.Size)
-		} else if boxType == "mdia" {
+		} else if boxType == "minf" {
 			parseMdiaBox(file, header.Size)
 		} else {
 			slog.Info("Skipping box in Trak", "type", boxType, "size", header.Size)

@@ -6,14 +6,16 @@ import (
 	"os"
 )
 
+type StcoBox struct {
+	EntryCount   uint32
+	ChunkOffsets []uint32
+}
+
 func parseStcoBox(file *os.File, size uint32) {
-	slog.Info("parsing stco box")
-	var entrycount uint32
-	binary.Read(file, binary.BigEndian, &entrycount)
-	slog.Info("Chunk offset count", "count", entrycount)
-	for i := 0; i < int(entrycount); i++ {
-		var chunkoffset uint32
-		binary.Read(file, binary.BigEndian, &chunkoffset)
-		slog.Info("Chunk offset", "index", i, "offset", chunkoffset)
-	}
+	slog.Info("Parsing stco box", "size", size)
+	var stco StcoBox
+	binary.Read(file, binary.BigEndian, &stco.EntryCount)
+	stco.ChunkOffsets = make([]uint32, stco.EntryCount)
+	binary.Read(file, binary.BigEndian, &stco.ChunkOffsets)
+	slog.Info("Chunk Offsets", "Entry Count", stco.EntryCount)
 }

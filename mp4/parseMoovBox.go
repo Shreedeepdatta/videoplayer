@@ -11,7 +11,7 @@ type Box struct {
 	Type [4]byte
 }
 
-func parseMoovBox(file *os.File, size uint32) {
+func ParseMoovBox(file *os.File, size uint32) {
 	slog.Info("Parsing moov box", "size", size)
 	endposition, _ := file.Seek(0, 1)
 	endposition += int64(size - 8)
