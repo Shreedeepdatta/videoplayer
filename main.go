@@ -13,6 +13,12 @@ func main() {
 		return
 	}
 	defer file.Close()
+	boxes, err := mp4.ParseMP4File(file)
+	if err != nil {
+		fmt.Printf("Error parsing MP4 file: %v\n", err)
+		return
+	}
 
-	mp4.Parsefile(file)
+	fmt.Println("MP4 Box Structure:")
+	mp4.PrintBoxStructure(boxes, "")
 }
